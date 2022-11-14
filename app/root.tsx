@@ -1,3 +1,5 @@
+import "./styles/global.css";
+
 import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
@@ -18,7 +20,7 @@ export const links: LinksFunction = () => {
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "Remix Notes",
+  title: "Discussions | Remix",
   viewport: "width=device-width,initial-scale=1",
 });
 
