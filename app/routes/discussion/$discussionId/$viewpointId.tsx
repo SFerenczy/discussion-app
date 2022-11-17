@@ -1,6 +1,6 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { ViewpointForm } from "~/components/ViewpointForm";
@@ -37,8 +37,10 @@ export default function EditViewpoint() {
   const { viewpoint } = useLoaderData<typeof loader>();
 
   return (
-    <div>
+    <div className="flex flex-col">
       <ViewpointForm formTitle="Edit viewpoint" viewpoint={viewpoint} />
+      <Link to="./arguments/?index">Arguments</Link>
+      <Outlet />
     </div>
   );
 }

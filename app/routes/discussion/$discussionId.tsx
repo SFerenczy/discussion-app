@@ -33,7 +33,7 @@ export default function Discussion() {
         <h1>{title}</h1>
         <div className="flex flex-grow flex-wrap gap-x-4">
           {viewpointsInDiscussion.map((viewpoint) => (
-            <Link to={`${viewpoint.id}/edit/`} key={viewpoint.id}>
+            <Link to={`${viewpoint.id}`} key={viewpoint.id}>
               <Card className="h-24 w-24">
                 <p>{viewpoint.text}</p>
               </Card>
@@ -41,7 +41,7 @@ export default function Discussion() {
           ))}
           <Card className="h-24 w-24">
             <div>
-              <Link to="viewpoint/new/">
+              <Link to="newviewpoint/">
                 <MdAdd />
               </Link>
             </div>
