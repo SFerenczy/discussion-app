@@ -5,6 +5,7 @@ import { MdAdd } from "react-icons/md";
 import invariant from "tiny-invariant";
 
 import { Card } from "~/components/Card";
+import { Text } from "~/components/Text";
 import { getDiscussion } from "~/models/discussion.server";
 import { getViewpointsByDiscussionId } from "~/models/viewpoint.server";
 
@@ -29,23 +30,27 @@ export default function Discussion() {
 
   return (
     <main className="flex min-h-screen bg-pink-200 p-4">
-      <div className="flex flex-grow flex-col items-center justify-center">
-        <h1>{title}</h1>
-        <div className="flex flex-grow flex-wrap gap-x-4">
-          {viewpointsInDiscussion.map((viewpoint) => (
-            <Link to={`${viewpoint.id}`} key={viewpoint.id}>
-              <Card className="h-24 w-24">
-                <p>{viewpoint.text}</p>
-              </Card>
-            </Link>
-          ))}
-          <Card className="h-24 w-24">
-            <div>
-              <Link to="newviewpoint/">
-                <MdAdd />
+      <div className="flex-grow">
+        <div className="flex flex-col items-center justify-center gap-y-4">
+          <Text as="h1" className="text-3xl">
+            {title}
+          </Text>
+          <div className="flex w-full flex-grow flex-wrap gap-x-4">
+            {viewpointsInDiscussion.map((viewpoint) => (
+              <Link to={`${viewpoint.id}`} key={viewpoint.id}>
+                <Card className="h-auto w-24">
+                  <p>{viewpoint.text}</p>
+                </Card>
               </Link>
-            </div>
-          </Card>
+            ))}
+            <Card className="h-24 w-24">
+              <div>
+                <Link to="newviewpoint/">
+                  <MdAdd />
+                </Link>
+              </div>
+            </Card>
+          </div>
         </div>
       </div>
       <Outlet />

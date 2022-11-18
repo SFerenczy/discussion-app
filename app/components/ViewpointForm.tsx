@@ -17,15 +17,15 @@ export function ViewpointForm(props: Props) {
 
   return (
     <Form method="post">
-      <Text as="h2">{formTitle}</Text>
-      <TextInput
-        name="text"
-        placeholder="Your Viewpoint"
-        defaultValue={viewpoint.text}
-        error={actionData?.errors?.text}
-      ></TextInput>
-      <div>
-        <Button type="submit">
+      <div className="flex flex-col items-center gap-y-2 border  border-solid border-gray-500 p-4">
+        <Text as="h2">{formTitle}</Text>
+        <TextInput
+          name="text"
+          placeholder="Your Viewpoint"
+          defaultValue={viewpoint.text}
+          error={actionData?.errors?.text}
+        ></TextInput>
+        <Button className="self-end" type="submit">
           <MdCheck />
         </Button>
       </div>

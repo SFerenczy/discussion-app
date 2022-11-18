@@ -50,18 +50,18 @@ export default function ViewpointArguments() {
   const fetcher = useFetcher();
 
   return (
-    <div className="flex flex-col">
-      {argumentsOfViewpoint.map((argumentsOfViewpoint) => (
-        <Text as="p" key={argumentsOfViewpoint.id}>
-          {argumentsOfViewpoint.text}
-        </Text>
-      ))}
-      <fetcher.Form method="post">
+    <fetcher.Form method="post">
+      <div className="flex flex-col items-center gap-y-2 border  border-solid border-gray-500 p-4">
+        {argumentsOfViewpoint.map((argumentsOfViewpoint) => (
+          <Text as="p" key={argumentsOfViewpoint.id}>
+            {argumentsOfViewpoint.text}
+          </Text>
+        ))}
         <TextInput name="text" placeholder="New argument"></TextInput>
-        <Button type="submit">
+        <Button className="self-end" type="submit">
           <MdCheck />
         </Button>
-      </fetcher.Form>
-    </div>
+      </div>
+    </fetcher.Form>
   );
 }

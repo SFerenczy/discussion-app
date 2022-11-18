@@ -3,10 +3,10 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function Button(props: Props) {
-  const { children, ...rest } = props;
+  const { children, className, ...rest } = props;
   return (
     <button
-      className="rounded-md bg-white p-2 shadow-md hover:bg-gray-50 active:bg-gray-100 active:shadow"
+      className={`rounded-md bg-white p-2 shadow-md hover:bg-gray-50 active:bg-gray-100 active:shadow ${className}`}
       {...rest}
     >
       {children}

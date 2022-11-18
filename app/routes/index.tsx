@@ -33,17 +33,17 @@ export default function Index() {
   return (
     <main>
       <div className="relative flex min-h-screen flex-col items-center justify-evenly bg-pink-200">
-        <div className="flex flex-grow flex-col justify-center">
-          <Form method="post">
+        <Form method="post">
+          <div className="flex w-96 flex-grow flex-col justify-center gap-y-3">
             <TextInput
-              label="Title of discussion"
+              label="What do you want to discuss?"
               name="title"
-              placeholder="Title"
+              placeholder="Question of your discussion"
               error={actionData?.errors?.title}
             />
             <Button type="submit">Discuss!</Button>
-          </Form>
-        </div>
+          </div>
+        </Form>
         <div className="pb-4">
           <Link className="underline" to="login">
             Login
