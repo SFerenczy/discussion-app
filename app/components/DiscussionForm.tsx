@@ -1,4 +1,4 @@
-import type { Viewpoint } from "@prisma/client";
+import type { Discussion } from "@prisma/client";
 import { Form, useActionData } from "@remix-run/react";
 import { MdCheck } from "react-icons/md";
 
@@ -8,11 +8,11 @@ import { TextInput } from "./TextInput";
 
 interface Props {
   formTitle: string;
-  viewpoint: Partial<Pick<Viewpoint, "text">>;
+  discussion: Partial<Pick<Discussion, "viewpoint">>;
 }
 
-export function ViewpointForm(props: Props) {
-  const { formTitle, viewpoint } = props;
+export function DiscussionForm(props: Props) {
+  const { formTitle, discussion } = props;
   const actionData = useActionData();
 
   return (
@@ -20,9 +20,9 @@ export function ViewpointForm(props: Props) {
       <div className="flex flex-col items-center gap-y-2 border  border-solid border-gray-500 p-4">
         <Text as="h2">{formTitle}</Text>
         <TextInput
-          name="text"
+          name="viewpoint"
           placeholder="Your Viewpoint"
-          defaultValue={viewpoint.text}
+          defaultValue={discussion.viewpoint}
           error={actionData?.errors?.text}
         ></TextInput>
         <Button className="self-end" type="submit">

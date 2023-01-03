@@ -9,22 +9,22 @@ import { Text } from "~/components/Text";
 import { TextInput } from "~/components/TextInput";
 import {
   createArgument,
-  getArgumentsByViewpointId,
+  getArgumentsByDiscussionId,
 } from "~/models/argument.server";
 import { requireUserId } from "~/session.server";
 
 export async function loader({ params }: LoaderArgs) {
-  invariant(params.viewpointId, "viewpointId not found");
+  invariant(params.discussionId, "discussionId not found");
 
-  const argumentsOfViewpoint = await getArgumentsByViewpointId({
-    viewpointId: params.viewpointId,
+  const argumentsOfDiscussion = await getArgumentsByDiscussionId({
+    discussionId: params.discussionId,
   });
 
-  return json({ argumentsOfViewpoint });
+  return json({ argumentsOfDiscussion });
 }
 
 export async function action({ request, params }: ActionArgs) {
-  invariant(params.viewpointId, "viewpointId not found");
+  invariant(params.discussionId, "discussionId not found");
   const formData = await request.formData();
   const text = formData.get("text");
   const userId = await requireUserId(request);
@@ -39,22 +39,22 @@ export async function action({ request, params }: ActionArgs) {
   const newArgument = await createArgument({
     creatorId: userId,
     text,
-    viewpointId: params.viewpointId,
+    discussionId: params.discussionId,
   });
 
   return json({ newArgument });
 }
 
-export default function ViewpointArguments() {
-  const { argumentsOfViewpoint } = useLoaderData<typeof loader>();
+export default function DiscussionArguments() {
+  const { argumentsOfDiscussion } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
 
   return (
     <fetcher.Form method="post">
       <div className="flex flex-col items-center gap-y-2 border  border-solid border-gray-500 p-4">
-        {argumentsOfViewpoint.map((argumentsOfViewpoint) => (
-          <Text as="p" key={argumentsOfViewpoint.id}>
-            {argumentsOfViewpoint.text}
+        {argumentsOfDiscussion.map((argumentsOfDiscussion) => (
+          <Text as="p" key={argumentsOfDiscussion.id}>
+            {argumentsOfDiscussion.text}
           </Text>
         ))}
         <TextInput name="text" placeholder="New argument"></TextInput>

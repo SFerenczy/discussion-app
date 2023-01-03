@@ -6,27 +6,27 @@ import invariant from "tiny-invariant";
 
 import { Card } from "~/components/Card";
 import { Text } from "~/components/Text";
-import { getDiscussion } from "~/models/discussion.server";
-import { getViewpointsByDiscussionId } from "~/models/viewpoint.server";
+import { getDiscussionsByQuestionId } from "~/models/discussion.server";
+import { getQuestion } from "~/models/question.server";
 
 export async function loader({ params }: LoaderArgs) {
-  invariant(params.discussionId, "discussionId not found");
+  invariant(params.questionId, "questionId not found");
 
-  const discussion = await getDiscussion({ id: params.discussionId });
-  if (!discussion) {
+  const question = await getQuestion({ id: params.questionId });
+  if (!question) {
     throw new Response("Not Found", { status: 400 });
   }
 
-  const viewpointsInDiscussion = await getViewpointsByDiscussionId({
-    discussionId: discussion.id,
+  const discussionsInQuestion = await getDiscussionsByQuestionId({
+    questionId: question.id,
   });
 
-  return json({ discussion, viewpointsInDiscussion });
+  return json({ question, discussionsInQuestion });
 }
 
-export default function Discussion() {
-  const { discussion, viewpointsInDiscussion } = useLoaderData<typeof loader>();
-  const title = discussion.title ?? "Untitled Discussion";
+export default function Question() {
+  const { question, discussionsInQuestion } = useLoaderData<typeof loader>();
+  const title = question.text ?? "Untitled Question";
 
   return (
     <main className="flex min-h-screen bg-pink-200 p-4">
@@ -36,16 +36,16 @@ export default function Discussion() {
             {title}
           </Text>
           <div className="flex w-full flex-grow flex-wrap gap-x-4">
-            {viewpointsInDiscussion.map((viewpoint) => (
-              <Link to={`${viewpoint.id}`} key={viewpoint.id}>
+            {discussionsInQuestion.map((discussion) => (
+              <Link to={`${discussion.id}`} key={discussion.id}>
                 <Card className="h-auto w-24">
-                  <p>{viewpoint.text}</p>
+                  <p>{discussion.viewpoint}</p>
                 </Card>
               </Link>
             ))}
             <Card className="h-24 w-24">
               <div>
-                <Link to="newviewpoint/">
+                <Link to="newdiscussion/">
                   <MdAdd />
                 </Link>
               </div>

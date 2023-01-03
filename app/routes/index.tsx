@@ -4,27 +4,27 @@ import { Form, Link, useActionData } from "@remix-run/react";
 
 import { Button } from "~/components/Button";
 import { TextInput } from "~/components/TextInput";
-import { createDiscussion } from "~/models/discussion.server";
+import { createQuestion } from "~/models/question.server";
 import { requireUserId } from "~/session.server";
 
 export async function action({ request }: ActionArgs) {
   const userId = await requireUserId(request);
   const formData = await request.formData();
-  const title = formData.get("title");
+  const text = formData.get("text");
 
-  if (typeof title !== "string" || title.length === 0) {
+  if (typeof text !== "string" || text.length === 0) {
     return json(
-      { errors: { title: "Title is required", body: null } },
+      { errors: { text: "Title is required", body: null } },
       { status: 400 }
     );
   }
 
-  const discussion = await createDiscussion({
+  const question = await createQuestion({
     creatorId: userId,
-    title: title,
+    text,
   });
 
-  return redirect(`/discussion/${discussion.id}`);
+  return redirect(`/question/${question.id}`);
 }
 
 export default function Index() {
@@ -37,14 +37,18 @@ export default function Index() {
           <div className="flex w-96 flex-grow flex-col justify-center gap-y-3">
             <TextInput
               label="What do you want to discuss?"
-              name="title"
-              placeholder="Question of your discussion"
-              error={actionData?.errors?.title}
+              name="text"
+              placeholder="Your Question"
+              error={actionData?.errors?.text}
             />
             <Button type="submit">Discuss!</Button>
           </div>
         </Form>
-        <div className="pb-4">
+        <div className="flex gap-1 pb-4">
+          <Link className="underline" to="join">
+            Join
+          </Link>
+          |
           <Link className="underline" to="login">
             Login
           </Link>

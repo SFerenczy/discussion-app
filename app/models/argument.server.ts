@@ -6,20 +6,20 @@ export async function getArgument({ id }: Pick<Argument, "id">) {
   return prisma.argument.findUnique({ where: { id } });
 }
 
-export async function getArgumentsByViewpointId({
-  viewpointId,
-}: Pick<Argument, "viewpointId">) {
-  return prisma.argument.findMany({ where: { viewpointId } });
+export async function getArgumentsByDiscussionId({
+  discussionId,
+}: Pick<Argument, "discussionId">) {
+  return prisma.argument.findMany({ where: { discussionId } });
 }
 
 export async function createArgument({
-  viewpointId,
+  discussionId,
   creatorId,
   text,
-}: Pick<Argument, "viewpointId" | "text" | "creatorId">) {
+}: Pick<Argument, "discussionId" | "text" | "creatorId">) {
   return prisma.argument.create({
     data: {
-      viewpointId,
+      discussionId,
       creatorId,
       text,
     },

@@ -14,11 +14,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  password    Password?
-  discussions Discussion[]
-  Note        Note[]
-  Viewpoint   Viewpoint[]
-  Argument    Argument[]
+  password   Password?
+  questions  Question[]
+  Note       Note[]
+  Discussion Discussion[]
+  Argument   Argument[]
 }
 
 model Password {
@@ -40,9 +40,9 @@ model Note {
   userId String
 }
 
-model Discussion {
-  id    String @id @default(cuid())
-  title String
+model Question {
+  id   String @id @default(cuid())
+  text String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -50,18 +50,18 @@ model Discussion {
   creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   creatorId String
 
-  viewpoints Viewpoint[]
+  discussions Discussion[]
 }
 
-model Viewpoint {
-  id   String @id @default(cuid())
-  text String
+model Discussion {
+  id        String @id @default(cuid())
+  viewpoint String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  discussionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  questionId String
 
   creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   creatorId String
@@ -76,8 +76,8 @@ model Argument {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  viewpoint   Viewpoint @relation(fields: [viewpointId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  viewpointId String
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  discussionId String
 
   creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   creatorId String
