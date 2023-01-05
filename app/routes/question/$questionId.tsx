@@ -29,7 +29,7 @@ export default function Question() {
   const title = question.text ?? "Untitled Question";
 
   return (
-    <main className="flex min-h-screen bg-pink-200 p-4">
+    <main className="flex min-h-screen bg-pink-100 p-4">
       <div className="flex-grow">
         <div className="flex flex-col items-center justify-center gap-y-4">
           <Text as="h1" className="text-3xl">

@@ -32,7 +32,7 @@ export default function Index() {
 
   return (
     <main>
-      <div className="relative flex min-h-screen flex-col items-center justify-evenly bg-pink-200">
+      <div className="relative flex min-h-screen flex-col items-center justify-evenly bg-pink-100">
         <Form method="post">
           <div className="flex w-96 flex-grow flex-col justify-center gap-y-3">
             <TextInput

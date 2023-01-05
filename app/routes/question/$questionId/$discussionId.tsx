@@ -25,18 +25,18 @@ export async function action({ params, request }: ActionArgs) {
   invariant(params.discussionId, "discussionId not found");
 
   const formData = await request.formData();
-  const text = formData.get("text");
+  const viewpoint = formData.get("text");
 
-  if (typeof text !== "string" || text.length === 0) {
+  if (typeof viewpoint !== "string" || viewpoint.length === 0) {
     return json(
-      { errors: { text: "Description is required" }, body: null },
+      { errors: { viewpoint: "Description is required" }, body: null },
       { status: 400 }
     );
   }
 
   await updateDiscussion({
     id: params.discussionId,
-    text,
+    viewpoint,
   });
 
   return redirect(`/questions/${params.questionId}`);

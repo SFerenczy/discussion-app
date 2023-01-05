@@ -17,10 +17,10 @@ export default function Questions() {
   const { questions } = useLoaderData<typeof loader>();
 
   return (
-    <main className="min-h-screen bg-pink-200">
+    <main className="min-h-screen bg-pink-100">
       {questions.map((question) => (
         <Link key={question.id} to={question.id}>
-          {question.title}
+          {question.text}
         </Link>
       ))}
     </main>
