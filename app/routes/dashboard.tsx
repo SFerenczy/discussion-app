@@ -1,7 +1,9 @@
 import type { LoaderArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { json } from "stream/consumers";
+import { json } from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
 
+import { Card } from "~/components/Card";
+import { Divider } from "~/components/Divider";
 import { getCreatedQuestionsByUserId } from "~/models/question.server";
 import { requireUserId } from "~/session.server";
 
@@ -19,16 +21,23 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function Dashboard() {
-  const questions = useLoaderData<typeof loader>();
+  const { questions } = useLoaderData<typeof loader>();
 
   return (
-    <main className="min-h-screen bg-pink-200">
-      <h1>Dashboard</h1>
-      <h2>Own Questions</h2>
-      <div>
-        {questions.map((question) => (
-          <></>
-        ))}
+    <main className="min-h-screen w-full bg-pink-100">
+      <div className="flex flex-col items-center px-48">
+        <h1>Dashboard</h1>
+        <Card className="w-full">
+          <h2>Own Questions</h2>
+          <Divider />
+          <div>
+            {questions.map((question) => (
+              <Link key={question.id} to={`/question/${question.id}`}>
+                {question.text}
+              </Link>
+            ))}
+          </div>
+        </Card>
       </div>
     </main>
   );
