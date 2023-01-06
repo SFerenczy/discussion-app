@@ -25,7 +25,7 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen w-full bg-pink-100">
-      <div className="flex flex-col items-center px-48">
+      <div className="flex flex-col items-center gap-y-4 px-48">
         <h1>Dashboard</h1>
         <Card className="w-full">
           <h2>Own Questions</h2>
@@ -37,6 +37,10 @@ export default function Dashboard() {
               </Link>
             ))}
           </div>
+        </Card>
+        <Card className="w-full">
+          <h2>Popular Questions</h2>
+          <Divider />
         </Card>
       </div>
     </main>
