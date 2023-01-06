@@ -1,11 +1,11 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, Link, useActionData } from "@remix-run/react";
+import { Form, Link, useActionData, useLoaderData } from "@remix-run/react";
 
 import { Button } from "~/components/Button";
 import { TextInput } from "~/components/TextInput";
 import { createQuestion } from "~/models/question.server";
-import { requireUserId } from "~/session.server";
+import { getUserId, requireUserId } from "~/session.server";
 
 export async function action({ request }: ActionArgs) {
   const userId = await requireUserId(request);
@@ -27,8 +27,14 @@ export async function action({ request }: ActionArgs) {
   return redirect(`/question/${question.id}`);
 }
 
+export async function loader({ request }: LoaderArgs) {
+  const userId = await getUserId(request);
+  return json({ userId });
+}
+
 export default function Index() {
   const actionData = useActionData<typeof action>();
+  const { userId } = useLoaderData<typeof loader>();
 
   return (
     <main>
@@ -45,13 +51,21 @@ export default function Index() {
           </div>
         </Form>
         <div className="flex gap-1 pb-4">
-          <Link className="underline" to="join">
-            Join
-          </Link>
-          |
-          <Link className="underline" to="login">
-            Login
-          </Link>
+          {userId ? (
+            <Link to="dashboard" className="underline">
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link to="join" className="underline">
+                Join
+              </Link>
+              |
+              <Link to="login" className="underline">
+                Login
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </main>
