@@ -35,25 +35,29 @@ export default function Question() {
           <Text as="h1" className="text-3xl">
             {title}
           </Text>
-          <div className="flex w-full flex-grow flex-wrap gap-x-4">
-            {discussionsInQuestion.map((discussion) => (
-              <Link to={`${discussion.id}`} key={discussion.id}>
-                <Card className="h-auto w-24">
-                  <p>{discussion.viewpoint}</p>
-                </Card>
-              </Link>
-            ))}
-            <Card className="h-24 w-24">
-              <div>
-                <Link to="newdiscussion/">
-                  <MdAdd />
+          <div className="flex w-full flex-row">
+            <div className="flex flex-wrap content-start justify-center gap-4">
+              {discussionsInQuestion.map((discussion) => (
+                <Link to={`${discussion.id}`} key={discussion.id}>
+                  <Card className="h-24 w-24">
+                    <p>{discussion.viewpoint}</p>
+                  </Card>
                 </Link>
-              </div>
-            </Card>
+              ))}
+              <Card className="flex h-24 w-24 items-center justify-center">
+                <div>
+                  <Link to="newdiscussion/">
+                    <MdAdd />
+                  </Link>
+                </div>
+              </Card>
+            </div>
+            <div className="w-full flex-grow">
+              <Outlet />
+            </div>
           </div>
         </div>
       </div>
-      <Outlet />
     </main>
   );
 }

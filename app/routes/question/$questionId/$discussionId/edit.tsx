@@ -49,7 +49,6 @@ export default function EditDiscussion() {
     <div className="flex flex-col">
       <DiscussionForm formTitle="Edit discussion" discussion={discussion} />
       <Link to="./arguments/?index">Arguments</Link>
-      <Outlet />
     </div>
   );
 }

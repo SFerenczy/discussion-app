@@ -6,8 +6,8 @@ interface Props extends React.ButtonHTMLAttributes<HTMLInputElement> {
 export function TextInput(props: Props) {
   const { label, error, ...rest } = props;
   return (
-    <label className="flex flex-col gap-y-1">
-      <span>{label}</span>
+    <div>
+      {label && <label className="flex flex-col gap-y-1">{label}</label>}
       <input
         type="text"
         className="rounded-md border border-none border-gray-300 p-3 outline-none"
@@ -19,6 +19,6 @@ export function TextInput(props: Props) {
           {error}
         </div>
       )}
-    </label>
+    </div>
   );
 }

@@ -6,7 +6,7 @@ export function Card(props: Props) {
   const { children, className, ...rest } = props;
   return (
     <div
-      className={`${className} flex flex-col items-center justify-center rounded-md bg-gray-50 p-4 shadow-md`}
+      className={`rounded-md bg-gray-50 p-4 shadow-md ${className} `}
       {...rest}
     >
       {children}

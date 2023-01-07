@@ -8,6 +8,7 @@ export async function getDiscussion({ id }: Pick<Discussion, "id">) {
     select: {
       id: true,
       viewpoint: true,
+      arguments: true,
     },
   });
 }
