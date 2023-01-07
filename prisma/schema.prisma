@@ -14,11 +14,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  password   Password?
-  questions  Question[]
-  Note       Note[]
-  Discussion Discussion[]
-  Argument   Argument[]
+  password    Password?
+  questions   Question[]
+  note        Note[]
+  discussion  Discussion[]
+  argument    Argument[]
+  proVotes    ProArgumentVote[]
+  contraVotes ContraArgumentVote[]
 }
 
 model Password {
@@ -84,4 +86,29 @@ model Argument {
 
   attackedArguments  Argument[] @relation("Attacks")
   attackingArguments Argument[] @relation("Attacks")
+
+  proVotes    ProArgumentVote[]
+  contraVotes ContraArgumentVote[]
+}
+
+model ProArgumentVote {
+  id   String @id @default(cuid())
+  vote Int
+
+  argument   Argument @relation(fields: [argumentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  argumentId String
+
+  voter   User   @relation(fields: [voterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  voterId String
+}
+
+model ContraArgumentVote {
+  id   String @id @default(cuid())
+  vote Int
+
+  argument   Argument @relation(fields: [argumentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  argumentId String
+
+  voter   User   @relation(fields: [voterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  voterId String
 }

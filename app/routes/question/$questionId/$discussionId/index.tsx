@@ -1,5 +1,5 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { MdCheck } from "react-icons/md";
 import invariant from "tiny-invariant";
@@ -9,13 +9,14 @@ import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
 import { TextInput } from "~/components/TextInput";
 import { createArgument } from "~/models/argument.server";
-import { getDiscussion, updateDiscussion } from "~/models/discussion.server";
-import { requireUserId } from "~/session.server";
+import { getDiscussion } from "~/models/discussion.server";
+import { getUserId, requireUserId } from "~/session.server";
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, request }: LoaderArgs) {
   const { questionId, discussionId } = params;
   invariant(questionId, "questionId not found");
   invariant(discussionId, "discussionId not found");
+  const userId = await getUserId(request);
 
   const discussion = await getDiscussion({ id: discussionId });
 
@@ -23,7 +24,7 @@ export async function loader({ params }: LoaderArgs) {
     throw new Response("Not Found", { status: 400 });
   }
 
-  return json({ discussion });
+  return json({ discussion, userId });
 }
 export async function action({ request, params }: ActionArgs) {
   invariant(params.discussionId, "discussionId not found");
@@ -48,12 +49,16 @@ export async function action({ request, params }: ActionArgs) {
 }
 
 export default function EditDiscussion() {
-  const { discussion } = useLoaderData<typeof loader>();
+  const { discussion, userId } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex w-full flex-col gap-2">
       {discussion.arguments.map((argument) => (
-        <ArgumentListItem key={argument.id} argument={argument} />
+        <ArgumentListItem
+          key={argument.id}
+          argument={argument}
+          userId={userId}
+        />
       ))}
       <Form method="post">
         <Card className="flex flex-row gap-2 p-1">
