@@ -19,8 +19,8 @@ model User {
   note        Note[]
   discussion  Discussion[]
   argument    Argument[]
-  proVotes    ProArgumentVote[]
-  contraVotes ContraArgumentVote[]
+  upvotes    ArgumentUpvote[]
+  downvotes ArgumentDownvote[]
 }
 
 model Password {
@@ -87,28 +87,30 @@ model Argument {
   attackedArguments  Argument[] @relation("Attacks")
   attackingArguments Argument[] @relation("Attacks")
 
-  proVotes    ProArgumentVote[]
-  contraVotes ContraArgumentVote[]
+  upvotes    ArgumentUpvote[]
+  downvotes ArgumentDownvote[]
 }
 
-model ProArgumentVote {
+model ArgumentUpvote {
   id   String @id @default(cuid())
-  vote Int
 
   argument   Argument @relation(fields: [argumentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   argumentId String
 
   voter   User   @relation(fields: [voterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   voterId String
+
+  @@unique ([argumentId, voterId])
 }
 
-model ContraArgumentVote {
+model ArgumentDownvote {
   id   String @id @default(cuid())
-  vote Int
 
   argument   Argument @relation(fields: [argumentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   argumentId String
 
   voter   User   @relation(fields: [voterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   voterId String
+  
+  @@unique ([argumentId, voterId])
 }

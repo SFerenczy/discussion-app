@@ -1,18 +1,20 @@
 import type {
   Argument,
-  ContraArgumentVote,
-  ProArgumentVote,
+  ArgumentDownvote,
+  ArgumentUpvote,
 } from "@prisma/client";
 import { useFetcher } from "@remix-run/react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+
+import { DiscussionFormName } from "~/routes/question/$questionId/$discussionId";
 
 import { Card } from "./Card";
 
 interface Props {
   /** The argument that is listed, including its votes */
   argument: Pick<Argument, "id" | "text"> & {
-    proVotes: ProArgumentVote[];
-    contraVotes: ContraArgumentVote[];
+    upvotes: ArgumentUpvote[];
+    downvotes: ArgumentDownvote[];
   };
   /** The id of the current user, if logged in. */
   userId?: string;
@@ -23,13 +25,13 @@ export const ArgumentListItem = ({ argument, userId }: Props): JSX.Element => (
     <div>{argument.text}</div>
     <div className="flex">
       <VotingButton
-        count={argument.proVotes.length}
+        count={argument.upvotes.length}
         up={true}
         argumentId={argument.id}
         userId={userId}
       />
       <VotingButton
-        count={argument.contraVotes.length}
+        count={argument.downvotes.length}
         up={false}
         argumentId={argument.id}
         userId={userId}
@@ -63,6 +65,13 @@ const VotingButton = ({
   return (
     <fetcher.Form method="post" name={up ? "upvote" : "downvote"}>
       <input type="hidden" name="argumentId" value={argumentId} />
+      <input
+        type="hidden"
+        name="formName"
+        value={
+          up ? DiscussionFormName.UPVOTE_FORM : DiscussionFormName.DOWNVOTE_FORM
+        }
+      />
       <div className="flex items-center">
         {userId && (
           <button type="submit">

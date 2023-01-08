@@ -12,8 +12,8 @@ export async function getDiscussion({ id }: Pick<Discussion, "id">) {
         select: {
           id: true,
           text: true,
-          proVotes: true,
-          contraVotes: true,
+          upvotes: true,
+          downvotes: true,
         },
       },
     },
