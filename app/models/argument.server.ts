@@ -1,9 +1,15 @@
-import type { Argument } from "@prisma/client";
+import type { Argument, Prisma } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
-export async function getArgument({ id }: Pick<Argument, "id">) {
-  return prisma.argument.findUnique({ where: { id } });
+export async function getArgument({
+  id,
+  include,
+}: Pick<Argument, "id"> & { include?: Prisma.ArgumentInclude }) {
+  return prisma.argument.findUnique({
+    where: { id },
+    include: include,
+  });
 }
 
 export async function getArgumentsByDiscussionId({

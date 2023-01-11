@@ -3,8 +3,12 @@ import type {
   ArgumentDownvote,
   ArgumentUpvote,
 } from "@prisma/client";
-import { useFetcher } from "@remix-run/react";
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { Link, useFetcher } from "@remix-run/react";
+import {
+  MdKeyboardArrowDown,
+  MdKeyboardArrowRight,
+  MdKeyboardArrowUp,
+} from "react-icons/md";
 
 import { DiscussionFormName } from "~/routes/question/$questionId/$discussionId";
 
@@ -36,6 +40,10 @@ export const ArgumentListItem = ({ argument, userId }: Props): JSX.Element => (
         argumentId={argument.id}
         userId={userId}
       />
+
+      <Link to={argument.id}>
+        <MdKeyboardArrowRight />
+      </Link>
     </div>
   </Card>
 );

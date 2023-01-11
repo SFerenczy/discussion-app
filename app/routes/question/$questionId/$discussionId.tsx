@@ -1,6 +1,6 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { Outlet, useFetcher, useLoaderData } from "@remix-run/react";
 import { MdCheck } from "react-icons/md";
 import invariant from "tiny-invariant";
 
@@ -55,33 +55,36 @@ export default function EditDiscussion() {
   const fetcher = useFetcher();
 
   return (
-    <div className="flex w-full flex-col gap-2">
-      {discussion.arguments.map((argument) => (
-        <ArgumentListItem
-          key={argument.id}
-          argument={argument}
-          userId={userId}
-        />
-      ))}
-      <fetcher.Form method="post" name={DiscussionFormName.ADD_ARGUMENT_FORM}>
-        <input
-          type="hidden"
-          name="formName"
-          value={DiscussionFormName.ADD_ARGUMENT_FORM}
-        />
-        <Card className="flex flex-row gap-2 p-1">
-          <TextInput name="text" placeholder="New argument"></TextInput>
-          <Button
-            className=""
-            type="submit"
-            aria-label="Add argument"
+    <>
+      <div className="flex w-full flex-col gap-2">
+        {discussion.arguments.map((argument) => (
+          <ArgumentListItem
+            key={argument.id}
+            argument={argument}
+            userId={userId}
+          />
+        ))}
+        <fetcher.Form method="post" name={DiscussionFormName.ADD_ARGUMENT_FORM}>
+          <input
+            type="hidden"
+            name="formName"
             value={DiscussionFormName.ADD_ARGUMENT_FORM}
-          >
-            <MdCheck />
-          </Button>
-        </Card>
-      </fetcher.Form>
-    </div>
+          />
+          <Card className="flex flex-row gap-2 p-1">
+            <TextInput name="text" placeholder="New argument"></TextInput>
+            <Button
+              className=""
+              type="submit"
+              aria-label="Add argument"
+              value={DiscussionFormName.ADD_ARGUMENT_FORM}
+            >
+              <MdCheck />
+            </Button>
+          </Card>
+        </fetcher.Form>
+      </div>
+      <Outlet />
+    </>
   );
 }
 

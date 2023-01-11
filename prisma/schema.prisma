@@ -14,13 +14,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  password    Password?
-  questions   Question[]
-  note        Note[]
-  discussion  Discussion[]
-  argument    Argument[]
+  password   Password?
+  questions  Question[]
+  note       Note[]
+  discussion Discussion[]
+  argument   Argument[]
   upvotes    ArgumentUpvote[]
-  downvotes ArgumentDownvote[]
+  downvotes  ArgumentDownvote[]
 }
 
 model Password {
@@ -87,12 +87,13 @@ model Argument {
   attackedArguments  Argument[] @relation("Attacks")
   attackingArguments Argument[] @relation("Attacks")
 
-  upvotes    ArgumentUpvote[]
-  downvotes ArgumentDownvote[]
+  upvotes        ArgumentUpvote[]
+  downvotes      ArgumentDownvote[]
+  ArgumentSource ArgumentSource[]
 }
 
 model ArgumentUpvote {
-  id   String @id @default(cuid())
+  id String @id @default(cuid())
 
   argument   Argument @relation(fields: [argumentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   argumentId String
@@ -100,17 +101,25 @@ model ArgumentUpvote {
   voter   User   @relation(fields: [voterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   voterId String
 
-  @@unique ([argumentId, voterId])
+  @@unique([argumentId, voterId])
 }
 
 model ArgumentDownvote {
-  id   String @id @default(cuid())
+  id String @id @default(cuid())
 
   argument   Argument @relation(fields: [argumentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   argumentId String
 
   voter   User   @relation(fields: [voterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   voterId String
-  
-  @@unique ([argumentId, voterId])
+
+  @@unique([argumentId, voterId])
+}
+
+model ArgumentSource {
+  id   String @id @default(cuid())
+  href String
+
+  argument   Argument @relation(fields: [argumentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  argumentId String
 }
