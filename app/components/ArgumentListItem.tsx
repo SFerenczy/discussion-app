@@ -3,10 +3,14 @@ import type {
   ArgumentDownvote,
   ArgumentUpvote,
 } from "@prisma/client";
-import { useFetcher } from "@remix-run/react";
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { Link, useFetcher } from "@remix-run/react";
+import {
+  MdKeyboardArrowDown,
+  MdKeyboardArrowRight,
+  MdKeyboardArrowUp,
+} from "react-icons/md";
 
-import { DiscussionFormName } from "~/routes/question/$questionId/$discussionId";
+import { DiscussionAction } from "~/routes/question/$questionId/$discussionId";
 
 import { Card } from "./Card";
 
@@ -36,6 +40,10 @@ export const ArgumentListItem = ({ argument, userId }: Props): JSX.Element => (
         argumentId={argument.id}
         userId={userId}
       />
+
+      <Link to={argument.id}>
+        <MdKeyboardArrowRight />
+      </Link>
     </div>
   </Card>
 );
@@ -67,9 +75,9 @@ const VotingButton = ({
       <input type="hidden" name="argumentId" value={argumentId} />
       <input
         type="hidden"
-        name="formName"
+        name="_action"
         value={
-          up ? DiscussionFormName.UPVOTE_FORM : DiscussionFormName.DOWNVOTE_FORM
+          up ? DiscussionAction.UPVOTE_FORM : DiscussionAction.DOWNVOTE_FORM
         }
       />
       <div className="flex items-center">

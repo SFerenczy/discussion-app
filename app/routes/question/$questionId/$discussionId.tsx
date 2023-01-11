@@ -1,6 +1,6 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { Outlet, useFetcher, useLoaderData } from "@remix-run/react";
 import { MdCheck } from "react-icons/md";
 import invariant from "tiny-invariant";
 
@@ -10,10 +10,10 @@ import { Card } from "~/components/Card";
 import { TextInput } from "~/components/TextInput";
 import { createArgument } from "~/models/argument.server";
 import { createDownvote, createUpvote } from "~/models/argumentVote.server";
-import { getDiscussion } from "~/models/discussion.server";
+import { getDiscussionAndVotesByUser } from "~/models/discussion.server";
 import { getUserId, requireUserId } from "~/session.server";
 
-export enum DiscussionFormName {
+export enum DiscussionAction {
   UPVOTE_FORM = "upvoteForm",
   DOWNVOTE_FORM = "downvoteForm",
   ADD_ARGUMENT_FORM = "addArgumentForm",
@@ -25,7 +25,14 @@ export async function loader({ params, request }: LoaderArgs) {
   invariant(discussionId, "discussionId not found");
   const userId = await getUserId(request);
 
-  const discussion = await getDiscussion({ id: discussionId });
+  if (typeof userId !== "string" || userId.length === 0) {
+    throw new Response("Not Found", { status: 400 });
+  }
+
+  const discussion = await getDiscussionAndVotesByUser(
+    { id: discussionId },
+    { id: userId }
+  );
 
   if (!discussion) {
     throw new Response("Not Found", { status: 400 });
@@ -33,55 +40,52 @@ export async function loader({ params, request }: LoaderArgs) {
 
   return json({ discussion, userId });
 }
+
 export async function action({ request, params }: ActionArgs) {
   invariant(params.discussionId, "discussionId not found");
   const userId = await requireUserId(request);
   const formData = await request.formData();
 
-  console.log(formData.get("formName"));
-
-  switch (formData.get("formName")) {
-    case DiscussionFormName.UPVOTE_FORM:
+  switch (formData.get("_action")) {
+    case DiscussionAction.UPVOTE_FORM:
       return await handleUpvoteForm(formData, userId);
-    case DiscussionFormName.DOWNVOTE_FORM:
+    case DiscussionAction.DOWNVOTE_FORM:
       return await handleDownvoteForm(formData, userId);
-    case DiscussionFormName.ADD_ARGUMENT_FORM:
+    case DiscussionAction.ADD_ARGUMENT_FORM:
       return await handleAddArgumentForm(formData, userId, params.discussionId);
   }
 }
 
-export default function EditDiscussion() {
+export default function DiscussionDetails() {
   const { discussion, userId } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
 
   return (
-    <div className="flex w-full flex-col gap-2">
-      {discussion.arguments.map((argument) => (
-        <ArgumentListItem
-          key={argument.id}
-          argument={argument}
-          userId={userId}
-        />
-      ))}
-      <fetcher.Form method="post" name={DiscussionFormName.ADD_ARGUMENT_FORM}>
-        <input
-          type="hidden"
-          name="formName"
-          value={DiscussionFormName.ADD_ARGUMENT_FORM}
-        />
-        <Card className="flex flex-row gap-2 p-1">
-          <TextInput name="text" placeholder="New argument"></TextInput>
-          <Button
-            className=""
-            type="submit"
-            aria-label="Add argument"
-            value={DiscussionFormName.ADD_ARGUMENT_FORM}
-          >
-            <MdCheck />
-          </Button>
-        </Card>
-      </fetcher.Form>
-    </div>
+    <>
+      <div className="flex w-full flex-col gap-2">
+        {discussion.arguments.map((argument) => (
+          <ArgumentListItem
+            key={argument.id}
+            argument={argument}
+            userId={userId}
+          />
+        ))}
+        <fetcher.Form method="post">
+          <Card className="flex flex-row gap-2 p-1">
+            <TextInput name="text" placeholder="New argument"></TextInput>
+            <Button
+              type="submit"
+              name="_action"
+              value={DiscussionAction.ADD_ARGUMENT_FORM}
+              aria-label="Add argument"
+            >
+              <MdCheck />
+            </Button>
+          </Card>
+        </fetcher.Form>
+      </div>
+      <Outlet />
+    </>
   );
 }
 

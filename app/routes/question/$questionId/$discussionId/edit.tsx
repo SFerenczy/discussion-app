@@ -1,17 +1,17 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Link, Outlet, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { DiscussionForm } from "~/components/DiscussionForm";
-import { getDiscussion, updateDiscussion } from "~/models/discussion.server";
+import { getDiscussionAndVotesByUser, updateDiscussion } from "~/models/discussion.server";
 
 export async function loader({ params }: LoaderArgs) {
   const { questionId, discussionId } = params;
   invariant(questionId, "questionId not found");
   invariant(discussionId, "discussionId not found");
 
-  const discussion = await getDiscussion({ id: discussionId });
+  const discussion = await getDiscussionAndVotesByUser({ id: discussionId });
 
   if (!discussion) {
     throw new Response("Not Found", { status: 400 });

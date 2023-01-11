@@ -1,19 +1,32 @@
-import type { Discussion } from "@prisma/client";
+import type { Discussion, User } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
-export async function getDiscussion({ id }: Pick<Discussion, "id">) {
+export async function getDiscussionAndVotesByUser(
+  { id }: Pick<Discussion, "id">,
+  { id: userId }: Pick<User, "id">
+) {
   return prisma.discussion.findUnique({
     where: { id },
-    select: {
-      id: true,
-      viewpoint: true,
+    include: {
       arguments: {
-        select: {
-          id: true,
-          text: true,
-          upvotes: true,
-          downvotes: true,
+        include: {
+          _count: {
+            select: {
+              upvotes: true,
+              downvotes: true,
+            },
+          },
+          upvotes: {
+            where: {
+              voterId: userId,
+            },
+          },
+          downvotes: {
+            where: {
+              voterId: userId,
+            },
+          },
         },
       },
     },
