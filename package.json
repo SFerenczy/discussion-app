@@ -34,12 +34,15 @@
     "@remix-run/react": "^1.7.5",
     "@remix-run/serve": "^1.7.5",
     "@remix-run/server-runtime": "^1.7.5",
+    "@remix-validated-form/with-zod": "^2.0.5",
     "bcryptjs": "^2.4.3",
     "isbot": "^3.6.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.6.0",
-    "tiny-invariant": "^1.3.1"
+    "remix-validated-form": "^4.6.10",
+    "tiny-invariant": "^1.3.1",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
