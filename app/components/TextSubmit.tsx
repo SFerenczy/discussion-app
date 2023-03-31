@@ -1,7 +1,7 @@
 import { useFetcher } from "@remix-run/react";
 import { MdCheck } from "react-icons/md";
 
-import { Button } from "./Button";
+import { Button } from "./atoms/Button";
 import { TextInput } from "./TextInput";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLInputElement> {

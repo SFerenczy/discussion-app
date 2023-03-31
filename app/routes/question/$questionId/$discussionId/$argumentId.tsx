@@ -6,9 +6,9 @@ import { useMemo } from "react";
 import { MdCheck } from "react-icons/md";
 import invariant from "tiny-invariant";
 
-import { Button } from "~/components/Button";
-import { Card } from "~/components/Card";
-import { Text } from "~/components/Text";
+import { Button } from "~/components/atoms/Button";
+import { Card } from "~/components/atoms/Card";
+import { Text } from "~/components/atoms/Text";
 import { TextInput } from "~/components/TextInput";
 import {
   createArgumentAttack,
@@ -86,9 +86,9 @@ export default function ArgumentDetails() {
 
   return (
     <Card className="w-96">
-      <h2>{argument.text}</h2>
+      <Text as="h2">{argument.text}</Text>
 
-      <h3>Attacked Arguments</h3>
+      <Text as="h3">Attacked Arguments</Text>
       <ul className="list-disc pl-4">
         {attackedArguments.map((argument) => (
           <li key={argument.id}>
@@ -116,7 +116,7 @@ export default function ArgumentDetails() {
         </Button>
       </fetcher.Form>
 
-      <h3>Argument Sources</h3>
+      <Text as="h3">Argument Sources</Text>
       <ul className="list-disc pl-4">
         {argumentSources.map((argumentSource: ArgumentSource) => (
           <li key={argumentSource.id}>

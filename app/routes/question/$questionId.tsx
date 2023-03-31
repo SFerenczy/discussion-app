@@ -4,8 +4,8 @@ import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { MdAdd } from "react-icons/md";
 import invariant from "tiny-invariant";
 
-import { Card } from "~/components/Card";
-import { Text } from "~/components/Text";
+import { Card } from "~/components/atoms/Card";
+import { Text } from "~/components/atoms/Text";
 import { getDiscussionsByQuestionId } from "~/models/discussion.server";
 import { getQuestion } from "~/models/question.server";
 

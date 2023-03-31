@@ -2,8 +2,9 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
-import { Card } from "~/components/Card";
-import { Divider } from "~/components/Divider";
+import { Card } from "~/components/atoms/Card";
+import { Divider } from "~/components/atoms/Divider";
+import { Text } from "~/components/atoms/Text";
 import { getCreatedQuestionsByUserId } from "~/models/question.server";
 import { requireUserId } from "~/session.server";
 
@@ -26,9 +27,9 @@ export default function Dashboard() {
   return (
     <main className="min-h-screen w-full bg-pink-100">
       <div className="flex flex-col items-center gap-y-4 px-48">
-        <h1>Dashboard</h1>
+        <Text as="h1">Dashboard</Text>
         <Card className="w-full">
-          <h2>Own Questions</h2>
+          <Text as="h2">Own Questions</Text>
           <Divider />
           <div>
             {questions.map((question) => (
@@ -39,7 +40,7 @@ export default function Dashboard() {
           </div>
         </Card>
         <Card className="w-full">
-          <h2>Popular Questions</h2>
+          <Text as="h2">Popular Questions</Text>
           <Divider />
         </Card>
       </div>

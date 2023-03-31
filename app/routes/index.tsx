@@ -2,7 +2,7 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useLoaderData } from "@remix-run/react";
 
-import { Button } from "~/components/Button";
+import { Button } from "~/components/atoms/Button";
 import { TextInput } from "~/components/TextInput";
 import { createQuestion } from "~/models/question.server";
 import { getUserId, requireUserId } from "~/session.server";

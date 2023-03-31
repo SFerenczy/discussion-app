@@ -5,8 +5,8 @@ import { MdCheck } from "react-icons/md";
 import invariant from "tiny-invariant";
 
 import { ArgumentListItem } from "~/components/ArgumentListItem";
-import { Button } from "~/components/Button";
-import { Card } from "~/components/Card";
+import { Button } from "~/components/atoms/Button";
+import { Card } from "~/components/atoms/Card";
 import { TextInput } from "~/components/TextInput";
 import { createArgument } from "~/models/argument.server";
 import { createDownvote, createUpvote } from "~/models/argumentVote.server";

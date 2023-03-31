@@ -12,7 +12,7 @@ import {
 
 import { DiscussionAction } from "~/routes/question/$questionId/$discussionId";
 
-import { Card } from "./Card";
+import { Card } from "./atoms/Card";
 
 interface Props {
   /** The argument that is listed, including its votes */

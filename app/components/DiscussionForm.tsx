@@ -2,8 +2,8 @@ import type { Discussion } from "@prisma/client";
 import { Form, useActionData } from "@remix-run/react";
 import { MdCheck } from "react-icons/md";
 
-import { Button } from "./Button";
-import { Text } from "./Text";
+import { Button } from "./atoms/Button";
+import { Text } from "./atoms/Text";
 import { TextInput } from "./TextInput";
 
 interface Props {
