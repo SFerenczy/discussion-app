@@ -1,5 +1,4 @@
 import type { Discussion } from "@prisma/client";
-import { Form, useActionData } from "@remix-run/react";
 import { MdCheck } from "react-icons/md";
 
 import { Button } from "./atoms/Button";
@@ -13,22 +12,18 @@ interface Props {
 
 export function DiscussionForm(props: Props) {
   const { formTitle, discussion } = props;
-  const actionData = useActionData();
 
   return (
-    <Form method="post">
-      <div className="flex flex-col items-center gap-y-2 border  border-solid border-gray-500 p-4">
-        <Text as="h2">{formTitle}</Text>
-        <TextInput
-          name="viewpoint"
-          placeholder="Your Viewpoint"
-          defaultValue={discussion.viewpoint}
-          error={actionData?.errors?.text}
-        ></TextInput>
-        <Button className="self-end" type="submit">
-          <MdCheck />
-        </Button>
-      </div>
-    </Form>
+    <div className="flex flex-col items-center gap-y-2 border  border-solid border-gray-500 p-4">
+      <Text as="h2">{formTitle}</Text>
+      <TextInput
+        name="viewpoint"
+        placeholder="Your Viewpoint"
+        defaultValue={discussion.viewpoint}
+      ></TextInput>
+      <Button className="self-end" type="submit">
+        <MdCheck />
+      </Button>
+    </div>
   );
 }

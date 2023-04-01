@@ -2,9 +2,12 @@ import type { ArgumentSource } from "@prisma/client";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
+import { withZod } from "@remix-validated-form/with-zod";
 import { useMemo } from "react";
 import { MdCheck } from "react-icons/md";
+import { ValidatedForm, validationError } from "remix-validated-form";
 import invariant from "tiny-invariant";
+import { z } from "zod";
 
 import { Button } from "~/components/atoms/Button";
 import { Card } from "~/components/atoms/Card";
@@ -24,11 +27,24 @@ enum ArgumentAction {
   ADD_ARGUMENT_ATTACK = "addArgumentAttack",
 }
 
+export const addArgumentSourceValidator = withZod(
+  z.object({
+    href: z
+      .string()
+      .min(1, "A source is required")
+      .url("A valid URL is required"),
+  })
+);
+export const addArgumentAttackValidator = withZod(
+  z.object({
+    attackedArgumentId: z.string().min(1, "An argumentId is required"),
+  })
+);
+
 export async function action({ request, params }: ActionArgs) {
   invariant(params.argumentId, "argumentId not found");
   const formData = await request.formData();
 
-  console.log(formData.get("_action"));
   switch (formData.get("_action")) {
     case ArgumentAction.ADD_ARGUMENT_SOURCE_FORM:
       return await handleAddArgumentSource(formData, params.argumentId);
@@ -97,7 +113,12 @@ export default function ArgumentDetails() {
         ))}
       </ul>
 
-      <fetcher.Form method="post" name="Add Attacked Argument">
+      <ValidatedForm
+        validator={addArgumentAttackValidator}
+        fetcher={fetcher}
+        method="post"
+        name="Add Attacked Argument"
+      >
         <select name="attackedArgumentId">
           {notAttackedArguments.map((notAttackedArgument) => (
             <option key={notAttackedArgument.id} value={notAttackedArgument.id}>
@@ -114,7 +135,7 @@ export default function ArgumentDetails() {
         >
           <MdCheck />
         </Button>
-      </fetcher.Form>
+      </ValidatedForm>
 
       <Text as="h3">Argument Sources</Text>
       <ul className="list-disc pl-4">
@@ -124,7 +145,12 @@ export default function ArgumentDetails() {
           </li>
         ))}
       </ul>
-      <fetcher.Form method="post" name="Add Argument Source">
+      <ValidatedForm
+        validator={addArgumentSourceValidator}
+        fetcher={fetcher}
+        method="post"
+        name="Add Argument Source"
+      >
         <div className="flex">
           <TextInput name="href" placeholder="New Source" />
           <Button
@@ -136,29 +162,15 @@ export default function ArgumentDetails() {
             <MdCheck />
           </Button>
         </div>
-      </fetcher.Form>
+      </ValidatedForm>
     </Card>
   );
 }
 
 async function handleAddArgumentSource(formData: FormData, argumentId: string) {
-  const href = formData.get("href");
-
-  if (typeof href !== "string" || href.length === 0) {
-    return json(
-      { errors: "You need to enter a source.", body: null },
-      { status: 400 }
-    );
-  }
-
-  try {
-    new URL(href);
-  } catch {
-    return json(
-      { errors: "You need to enter a valid URL.", body: null },
-      { status: 400 }
-    );
-  }
+  const data = await addArgumentSourceValidator.validate(formData);
+  if (data.error) return validationError(data.error);
+  const { href } = data.data;
 
   return json({
     argumentSource: await createArgumentSource({
@@ -169,20 +181,9 @@ async function handleAddArgumentSource(formData: FormData, argumentId: string) {
 }
 
 async function handleAddArgumentAttack(formData: FormData, argumentId: string) {
-  const attackedArgumentId = formData.get("attackedArgumentId");
-
-  if (
-    typeof attackedArgumentId !== "string" ||
-    attackedArgumentId.length === 0
-  ) {
-    return json(
-      {
-        errors: "You need to give an ID for the attacked Argument.",
-        body: null,
-      },
-      { status: 400 }
-    );
-  }
+  const data = await addArgumentAttackValidator.validate(formData);
+  if (data.error) return validationError(data.error);
+  const { attackedArgumentId } = data.data;
 
   return json({
     argumentAttack: await createArgumentAttack(

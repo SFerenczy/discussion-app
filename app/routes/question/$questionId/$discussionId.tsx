@@ -1,8 +1,11 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useFetcher, useLoaderData } from "@remix-run/react";
+import { withZod } from "@remix-validated-form/with-zod";
 import { MdCheck } from "react-icons/md";
+import { ValidatedForm, validationError } from "remix-validated-form";
 import invariant from "tiny-invariant";
+import { z } from "zod";
 
 import { ArgumentListItem } from "~/components/ArgumentListItem";
 import { Button } from "~/components/atoms/Button";
@@ -17,6 +20,31 @@ export enum DiscussionAction {
   UPVOTE_FORM = "upvoteForm",
   DOWNVOTE_FORM = "downvoteForm",
   ADD_ARGUMENT_FORM = "addArgumentForm",
+}
+
+export const voteValidator = withZod(
+  z.object({ argumentId: z.string().min(1, "An argumentId is required") })
+);
+
+export const addArgumentValidator = withZod(
+  z.object({
+    text: z.string().min(1, "An argument is required"),
+  })
+);
+
+export async function action({ request, params }: ActionArgs) {
+  invariant(params.discussionId, "discussionId not found");
+  const userId = await requireUserId(request);
+  const formData = await request.formData();
+
+  switch (formData.get("_action")) {
+    case DiscussionAction.UPVOTE_FORM:
+      return await handleUpvoteForm(formData, userId);
+    case DiscussionAction.DOWNVOTE_FORM:
+      return await handleDownvoteForm(formData, userId);
+    case DiscussionAction.ADD_ARGUMENT_FORM:
+      return await handleAddArgumentForm(formData, userId, params.discussionId);
+  }
 }
 
 export async function loader({ params, request }: LoaderArgs) {
@@ -41,21 +69,6 @@ export async function loader({ params, request }: LoaderArgs) {
   return json({ discussion, userId });
 }
 
-export async function action({ request, params }: ActionArgs) {
-  invariant(params.discussionId, "discussionId not found");
-  const userId = await requireUserId(request);
-  const formData = await request.formData();
-
-  switch (formData.get("_action")) {
-    case DiscussionAction.UPVOTE_FORM:
-      return await handleUpvoteForm(formData, userId);
-    case DiscussionAction.DOWNVOTE_FORM:
-      return await handleDownvoteForm(formData, userId);
-    case DiscussionAction.ADD_ARGUMENT_FORM:
-      return await handleAddArgumentForm(formData, userId, params.discussionId);
-  }
-}
-
 export default function DiscussionDetails() {
   const { discussion, userId } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
@@ -70,7 +83,11 @@ export default function DiscussionDetails() {
             userId={userId}
           />
         ))}
-        <fetcher.Form method="post">
+        <ValidatedForm
+          validator={addArgumentValidator}
+          fetcher={fetcher}
+          method="post"
+        >
           <Card className="flex flex-row gap-2 p-1">
             <TextInput name="text" placeholder="New argument"></TextInput>
             <Button
@@ -82,7 +99,7 @@ export default function DiscussionDetails() {
               <MdCheck />
             </Button>
           </Card>
-        </fetcher.Form>
+        </ValidatedForm>
       </div>
       <Outlet />
     </>
@@ -94,14 +111,9 @@ async function handleAddArgumentForm(
   userId: string,
   discussionId: string
 ) {
-  const text = formData.get("text");
-
-  if (typeof text !== "string" || text.length === 0) {
-    return json(
-      { errors: { text: "argument is required" }, body: null },
-      { status: 400 }
-    );
-  }
+  const data = await addArgumentValidator.validate(formData);
+  if (data.error) return validationError(data.error);
+  const { text } = data.data;
 
   const newArgument = await createArgument({
     creatorId: userId,
@@ -113,14 +125,9 @@ async function handleAddArgumentForm(
 }
 
 async function handleUpvoteForm(formData: FormData, userId: string) {
-  const argumentId = formData.get("argumentId");
-
-  if (typeof argumentId !== "string" || argumentId.length === 0) {
-    return json(
-      { errors: { upvote: "argumentId is required" }, body: null },
-      { status: 400 }
-    );
-  }
+  const data = await voteValidator.validate(formData);
+  if (data.error) return validationError(data.error);
+  const { argumentId } = data.data;
 
   const newUpvote = await createUpvote({
     voterId: userId,
@@ -131,14 +138,9 @@ async function handleUpvoteForm(formData: FormData, userId: string) {
 }
 
 async function handleDownvoteForm(formData: FormData, userId: string) {
-  const argumentId = formData.get("argumentId");
-
-  if (typeof argumentId !== "string" || argumentId.length === 0) {
-    return json(
-      { errors: { upvote: "argumentId is required" }, body: null },
-      { status: 400 }
-    );
-  }
+  const data = await voteValidator.validate(formData);
+  if (data.error) return validationError(data.error);
+  const { argumentId } = data.data;
 
   const newDownvote = await createDownvote({
     voterId: userId,

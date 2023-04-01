@@ -1,7 +1,10 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import { withZod } from "@remix-validated-form/with-zod";
+import { ValidatedForm, validationError } from "remix-validated-form";
 import invariant from "tiny-invariant";
+import { z } from "zod";
 
 import { DiscussionForm } from "~/components/DiscussionForm";
 import {
@@ -9,6 +12,12 @@ import {
   updateDiscussion,
 } from "~/models/discussion.server";
 import { requireUserId } from "~/session.server";
+
+export const validator = withZod(
+  z.object({
+    viewpoint: z.string().min(1, { message: "A Viewpoint is required." }),
+  })
+);
 
 export async function loader({ params, request }: LoaderArgs) {
   const userId = await requireUserId(request);
@@ -32,15 +41,9 @@ export async function action({ params, request }: ActionArgs) {
   invariant(params.questionId, "questionId not found");
   invariant(params.discussionId, "discussionId not found");
 
-  const formData = await request.formData();
-  const viewpoint = formData.get("text");
-
-  if (typeof viewpoint !== "string" || viewpoint.length === 0) {
-    return json(
-      { errors: { viewpoint: "Description is required" }, body: null },
-      { status: 400 }
-    );
-  }
+  const data = await validator.validate(await request.formData());
+  if (data.error) return validationError(data.error);
+  const { viewpoint } = data.data;
 
   await updateDiscussion({
     id: params.discussionId,
@@ -55,7 +58,9 @@ export default function EditDiscussion() {
 
   return (
     <div className="flex flex-col">
-      <DiscussionForm formTitle="Edit discussion" discussion={discussion} />
+      <ValidatedForm validator={validator} method="post">
+        <DiscussionForm formTitle="Edit discussion" discussion={discussion} />
+      </ValidatedForm>
       <Link to="./arguments/?index">Arguments</Link>
     </div>
   );

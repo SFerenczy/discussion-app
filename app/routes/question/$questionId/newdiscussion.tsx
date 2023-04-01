@@ -1,11 +1,20 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
+import { withZod } from "@remix-validated-form/with-zod";
+import { ValidatedForm, validationError } from "remix-validated-form";
 import invariant from "tiny-invariant";
+import { z } from "zod";
 
 import { DiscussionForm } from "~/components/DiscussionForm";
 import { createDiscussion } from "~/models/discussion.server";
 import { getQuestion } from "~/models/question.server";
 import { requireUserId } from "~/session.server";
+
+export const validator = withZod(
+  z.object({
+    viewpoint: z.string().min(1, { message: "A Viewpoint is required." }),
+  })
+);
 
 export async function loader({ params }: LoaderArgs) {
   invariant(params.questionId, "questionId not found");
@@ -21,15 +30,9 @@ export async function loader({ params }: LoaderArgs) {
 export async function action({ request, params }: ActionArgs) {
   invariant(params.questionId, "questionId not found");
   const userId = await requireUserId(request);
-  const formData = await request.formData();
-  const viewpoint = formData.get("viewpoint");
-
-  if (typeof viewpoint !== "string" || viewpoint.length === 0) {
-    return json(
-      { errors: { viewpoint: "A viewpoint is required" }, body: null },
-      { status: 400 }
-    );
-  }
+  const data = await validator.validate(await request.formData());
+  if (data.error) return validationError(data.error);
+  const { viewpoint } = data.data;
 
   await createDiscussion({
     questionId: params.questionId,
@@ -43,7 +46,9 @@ export async function action({ request, params }: ActionArgs) {
 export default function NewDiscussion() {
   return (
     <div>
-      <DiscussionForm formTitle="New Discussion" discussion={{}} />
+      <ValidatedForm validator={validator} method="post">
+        <DiscussionForm formTitle="New Discussion" discussion={{}} />
+      </ValidatedForm>
     </div>
   );
 }
