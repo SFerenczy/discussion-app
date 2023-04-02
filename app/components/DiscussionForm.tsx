@@ -14,16 +14,18 @@ export function DiscussionForm(props: Props) {
   const { formTitle, discussion } = props;
 
   return (
-    <div className="flex flex-col items-center gap-y-2 border  border-solid border-gray-500 p-4">
+    <div className="flex flex-col gap-y-2">
       <Text as="h2">{formTitle}</Text>
-      <TextInput
-        name="viewpoint"
-        placeholder="Your Viewpoint"
-        defaultValue={discussion.viewpoint}
-      ></TextInput>
-      <Button className="self-end" type="submit">
-        <MdCheck />
-      </Button>
+      <div className="flex items-center">
+        <TextInput
+          name="viewpoint"
+          placeholder="Your Viewpoint"
+          defaultValue={discussion.viewpoint}
+        ></TextInput>
+        <Button className="self-end" type="submit">
+          <MdCheck />
+        </Button>
+      </div>
     </div>
   );
 }

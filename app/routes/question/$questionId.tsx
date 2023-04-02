@@ -36,7 +36,7 @@ export default function Question() {
             {title}
           </Text>
           <div className="flex w-full flex-row gap-x-4">
-            <div className="flex flex-wrap content-start justify-center gap-4">
+            <div className="flex flex-col content-start justify-start gap-4">
               {discussionsInQuestion.map((discussion) => (
                 <Link to={`${discussion.id}`} key={discussion.id}>
                   <Card className="h-24 w-24">

@@ -5,6 +5,7 @@ import { ValidatedForm, validationError } from "remix-validated-form";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 
+import { Card } from "~/components/atoms/Card";
 import { DiscussionForm } from "~/components/DiscussionForm";
 import { createDiscussion } from "~/models/discussion.server";
 import { getQuestion } from "~/models/question.server";
@@ -45,10 +46,10 @@ export async function action({ request, params }: ActionArgs) {
 
 export default function NewDiscussion() {
   return (
-    <div>
+    <Card className="w-full">
       <ValidatedForm validator={validator} method="post">
         <DiscussionForm formTitle="New Discussion" discussion={{}} />
       </ValidatedForm>
-    </div>
+    </Card>
   );
 }

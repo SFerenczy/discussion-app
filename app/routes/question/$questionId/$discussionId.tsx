@@ -121,7 +121,7 @@ export default function DiscussionDetails() {
                 />
                 <TextInput name="text" placeholder="New argument"></TextInput>
                 <Button type="submit" aria-label="Add argument">
-                  <MdCheck />
+                  <MdCheck className="w-8 text-2xl" />
                 </Button>
               </Card>
             </ValidatedForm>
@@ -155,7 +155,7 @@ export default function DiscussionDetails() {
                 />
                 <TextInput name="text" placeholder="New argument"></TextInput>
                 <Button type="submit" aria-label="Add argument">
-                  <MdCheck />
+                  <MdCheck className="w-8 text-2xl" />
                 </Button>
               </Card>
             </ValidatedForm>
