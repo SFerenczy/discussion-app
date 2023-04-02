@@ -1,8 +1,8 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Outlet, useFetcher, useLoaderData } from "@remix-run/react";
+import { Link, Outlet, useFetcher, useLoaderData } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
-import { MdCheck } from "react-icons/md";
+import { MdCheck, MdClear } from "react-icons/md";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import invariant from "tiny-invariant";
 import { z } from "zod";
@@ -87,7 +87,10 @@ export default function DiscussionDetails() {
 
   return (
     <>
-      <Card className="flex w-full flex-col items-center gap-y-4">
+      <Card className="relative flex w-full flex-col items-center gap-y-4">
+        <Link to="../" className="absolute top-2 right-2">
+          <MdClear />
+        </Link>
         <Text as="h2" className="text-2xl">
           {discussion.viewpoint}
         </Text>
