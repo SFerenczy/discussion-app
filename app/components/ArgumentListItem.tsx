@@ -24,6 +24,9 @@ interface Props {
   userId?: string;
 }
 
+/**
+ * Parent needs to handle DiscussionAction.UPVOTE_FORM and DiscussionAction.DOWNVOTE_FORM in its action.
+ */
 export const ArgumentListItem = ({ argument, userId }: Props): JSX.Element => (
   <Card className="flex w-full justify-between p-2">
     <div>{argument.text}</div>

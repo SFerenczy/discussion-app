@@ -32,12 +32,23 @@ export async function createArgument({
   discussionId,
   creatorId,
   text,
-}: Pick<Argument, "discussionId" | "text" | "creatorId">) {
+  argumentAttacksViewpoint,
+  argumentDefendsViewpoint,
+}: Pick<
+  Argument,
+  | "discussionId"
+  | "text"
+  | "creatorId"
+  | "argumentAttacksViewpoint"
+  | "argumentDefendsViewpoint"
+>) {
   return prisma.argument.create({
     data: {
       discussion: { connect: { id: discussionId } },
       creator: { connect: { id: creatorId } },
       text,
+      argumentAttacksViewpoint,
+      argumentDefendsViewpoint,
     },
   });
 }
