@@ -10,7 +10,7 @@ import {
   MdKeyboardArrowUp,
 } from "react-icons/md";
 
-import { DiscussionAction } from "~/routes/question/$questionId/$discussionId";
+import { DiscussionAction } from "~/routes/question.$questionId.$discussionId";
 
 import { Card } from "./atoms/Card";
 

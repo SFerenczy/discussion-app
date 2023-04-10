@@ -88,7 +88,7 @@ export default function DiscussionDetails() {
   return (
     <>
       <Card className="relative flex w-full flex-col items-center gap-y-4">
-        <Link to="../" className="absolute top-2 right-2">
+        <Link to="../" className="absolute right-2 top-2">
           <MdClear />
         </Link>
         <Text as="h2" className="text-2xl">
